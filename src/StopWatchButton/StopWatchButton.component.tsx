@@ -1,8 +1,9 @@
 import { memo } from "react";
 import type { StopWatchButtonProps } from "../types/types.ts";
+import styles from "./StopWatchButton.module.scss";
 
 const StopWatchButton = ({ type, onClick, children }: StopWatchButtonProps) => {
-  const buttonClassName = `stopwatch__button stopwatch__button--${type}`;
+  const buttonClassName = `${styles.button} ${styles[type]}`;
 
   return (
     <button className={buttonClassName} onClick={onClick}>

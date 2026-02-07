@@ -4,8 +4,7 @@ import { StopWatchButton } from "../StopWatchButton";
 import { formatTime } from "../shared/utils/formatTime.ts";
 import { useStopWatchCallbacks } from "../hooks/useStopWatchCallbacks.ts";
 import { useButtonVisibility } from "../hooks/useButtonVisibility.ts";
-import "./StopWatchItem.styles.scss";
-import "../StopWatchButton/StopWatchButton.styles.scss";
+import styles from "./StopWatchItem.module.scss";
 
 const StopWatchItem =  (props: StopWatchProps) => {
   const formattedTime = useMemo(() => formatTime(props.stopwatch.time), [props.stopwatch.time]);
@@ -13,10 +12,10 @@ const StopWatchItem =  (props: StopWatchProps) => {
   const { showStart, showPauseAndClear, showResumeAndClear } = useButtonVisibility(props.stopwatch);
 
   return (
-    <div className="stopwatch">
-      <div className="stopwatch__time">{formattedTime}</div>
+    <div className={styles.container}>
+      <div className={styles.time}>{formattedTime}</div>
 
-      <div className="stopwatch__buttons">
+      <div className={styles.buttons}>
         {showStart && (
           <StopWatchButton type="start" onClick={handleStart}>
             Start
