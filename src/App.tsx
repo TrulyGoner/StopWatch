@@ -1,6 +1,6 @@
-import StopWatchItem from "./components/StopWatchItem.tsx";
+import { StopWatchItem } from "./StopWatchItem";
 import { useStopWatchList } from "./hooks/useStopWatchList.ts";
-import './App.css'
+import './App.scss'
 
 const App = () => {
   const item = useStopWatchList();
