@@ -32,11 +32,11 @@ ul, ol {
 a {
   color: inherit;
   text-decoration: none;
-}
 
-a:focus {
-  outline: 2px solid transparent;
-  outline-offset: 2px;
+  &:focus {
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+  }
 }
 
 button {
@@ -46,11 +46,11 @@ button {
   font-family: inherit;
   font-size: inherit;
   color: inherit;
-}
 
-button:focus {
-  outline: 2px solid transparent;
-  outline-offset: 2px;
+  &:focus {
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+  }
 }
 
 code {

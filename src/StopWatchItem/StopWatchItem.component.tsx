@@ -1,10 +1,11 @@
 import { useMemo } from "react";
 import type { StopWatchProps } from "../types/types.ts";
-import StopWatchButton from "./StopWatchButton.tsx";
+import { StopWatchButton } from "../StopWatchButton";
 import { formatTime } from "../shared/utils/formatTime.ts";
 import { useStopWatchCallbacks } from "../hooks/useStopWatchCallbacks.ts";
 import { useButtonVisibility } from "../hooks/useButtonVisibility.ts";
-import "./StopWatch.css";
+import "./StopWatchItem.styles.scss";
+import "../StopWatchButton/StopWatchButton.styles.scss";
 
 const StopWatchItem =  (props: StopWatchProps) => {
   const formattedTime = useMemo(() => formatTime(props.stopwatch.time), [props.stopwatch.time]);
