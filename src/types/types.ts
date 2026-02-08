@@ -13,10 +13,10 @@ export interface StopWatchProps {
   onDelete: (id: string) => void;
 }
 
-export type ButtonType = 'start' | 'pause' | 'resume' | 'clear' | 'delete';
+export type ButtonVariant = 'start' | 'pause' | 'resume' | 'clear' | 'delete';
 
-export interface StopWatchButtonProps {
-  type: ButtonType;
+export interface ButtonProps {
+  variant: ButtonVariant;
   onClick: () => void;
   children: React.ReactNode;
 }
