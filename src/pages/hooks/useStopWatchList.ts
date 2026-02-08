@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
-import type { StopWatch } from '../types/types';
-
+import type { StopWatch } from "../StopWatch/StopWatch.types";
+//В главном
 export const useStopWatchList = () => {
   const [stopwatches, setStopwatches] = useState<StopWatch[]>([]);
   const intervalRef = useRef<{ [key: string]: ReturnType<typeof setInterval> }>({});

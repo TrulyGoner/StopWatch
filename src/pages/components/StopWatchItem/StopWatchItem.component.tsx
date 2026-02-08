@@ -1,9 +1,9 @@
 import { useMemo } from "react";
-import type { StopWatchProps } from "../types/types.ts";
-import { Button } from "../shared/ui/Button";
-import { formatTime } from "../shared/utils/formatTime.ts";
-import { useStopWatchCallbacks } from "../hooks/useStopWatchCallbacks.ts";
-import { useButtonVisibility } from "../hooks/useButtonVisibility.ts";
+import type { StopWatchProps } from "../../StopWatch/StopWatch.types";
+import { Button } from "../../../shared/ui/Button";
+import { formatTime } from "../../../shared/utils/formatTime.ts";
+import { useStopWatchCallbacks } from "../../hooks/useStopWatchCallbacks.ts";
+import { useButtonVisibility } from "../../hooks/useButtonVisibility.ts";
 import styles from "./StopWatchItem.module.scss";
 
 const StopWatchItem =  (props: StopWatchProps) => {

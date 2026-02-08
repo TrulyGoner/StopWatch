@@ -12,11 +12,3 @@ export interface StopWatchProps {
   onClear: (id: string) => void;
   onDelete: (id: string) => void;
 }
-
-export type ButtonVariant = 'start' | 'pause' | 'resume' | 'clear' | 'delete';
-
-export interface ButtonProps {
-  variant: ButtonVariant;
-  onClick: () => void;
-  children: React.ReactNode;
-}

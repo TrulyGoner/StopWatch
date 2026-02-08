@@ -1,6 +1,6 @@
 import { useMemo } from "react";
-import type { StopWatch } from "../types/types";
-
+import type { StopWatch } from "../StopWatch/StopWatch.types";
+//В item
 export const useButtonVisibility = (stopwatch: StopWatch) => {
   return useMemo(
     () => ({

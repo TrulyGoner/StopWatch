@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from "react";
-import type { StopWatchProps } from "../types/types";
-
+import type { StopWatchProps } from "../StopWatch/StopWatch.types";
+//В item
 export const useStopWatchCallbacks = ({
   stopwatch,
   onStart,

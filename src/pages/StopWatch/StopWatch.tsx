@@ -1,5 +1,5 @@
-import { StopWatchItem } from "../../../StopWatchItem/index.ts";
-import { useStopWatchList } from "../../../hooks/useStopWatchList.ts";
+import { StopWatchItem } from "../components/StopWatchItem/index.ts";
+import { useStopWatchList } from "../hooks/useStopWatchList.ts";
 import styles from './StopWatch.module.scss'
 
 const StopWatch = () => {
