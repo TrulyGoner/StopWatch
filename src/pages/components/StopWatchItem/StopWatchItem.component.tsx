@@ -1,28 +1,56 @@
-import { useMemo, useCallback } from "react";
-import type { StopWatchProps } from "../../StopWatch/StopWatch.types";
+import { useMemo, useCallback, useState, useEffect } from "react";
 import { Button } from "../../../shared/ui/Button";
 import { formatTime } from "../../../shared/utils/formatTime.ts";
 import styles from "./StopWatchItem.module.scss";
 
-const StopWatchItem = ({
-  stopwatch,
-  onStart,
-  onPause,
-  onResume,
-  onClear,
-  onDelete,
-}: StopWatchProps) => {
-  const formattedTime = useMemo(() => formatTime(stopwatch.time), [stopwatch.time]);
+interface StopWatchItemProps {
+  id: string;
+  onDelete: (id: string) => void;
+}
 
-  const handleStart = useCallback(():void => onStart(stopwatch.id), [stopwatch.id, onStart]);
-  const handlePause = useCallback(():void => onPause(stopwatch.id), [stopwatch.id, onPause]);
-  const handleResume = useCallback(():void => onResume(stopwatch.id), [stopwatch.id, onResume]);
-  const handleClear = useCallback(():void => onClear(stopwatch.id), [stopwatch.id, onClear]);
-  const handleDelete = useCallback(():void => onDelete(stopwatch.id), [stopwatch.id, onDelete]);
+const StopWatchItem = ({ id, onDelete }: StopWatchItemProps) => {
+  const [time, setTime] = useState<number>(0);
+  const [isRunning, setIsRunning] = useState<boolean>(false);
+  const [hasStarted, setHasStarted] = useState<boolean>(false);
 
-  const isShowStart = !stopwatch.hasStarted;
-  const isShowPauseAndClear = stopwatch.isRunning;
-  const isShowResumeAndClear = stopwatch.hasStarted && !stopwatch.isRunning;
+  const formattedTime = useMemo(() => formatTime(time), [time]);
+
+  useEffect(() => {
+    if (!isRunning) return;
+
+    const interval = setInterval(() => {
+      setTime(prev => prev + 1);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [isRunning]);
+
+  const handleStart = useCallback((): void => {
+    setIsRunning(true);
+    setHasStarted(true);
+  }, []);
+
+  const handlePause = useCallback((): void => {
+    setIsRunning(false);
+  }, []);
+
+  const handleResume = useCallback((): void => {
+    setIsRunning(true);
+  }, []);
+
+  const handleClear = useCallback((): void => {
+    setTime(0);
+    setIsRunning(false);
+    setHasStarted(false);
+  }, []);
+
+  const handleDelete = useCallback((): void => {
+    onDelete(id);
+  }, [id, onDelete]);
+
+  const isShowStart = !hasStarted;
+  const isShowPauseAndClear = isRunning;
+  const isShowResumeAndClear = hasStarted && !isRunning;
 
   return (
     <div className={styles.container}>
