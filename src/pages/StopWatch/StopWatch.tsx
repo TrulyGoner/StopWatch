@@ -9,10 +9,6 @@ const StopWatch = () => {
     const newId = Date.now().toString();
     setStopwatchIds(prev => [...prev, newId]);
   }, []);
-
-  const deleteStopWatch = useCallback((id: string) => {
-    setStopwatchIds(prev => prev.filter(swId => swId !== id));
-  }, []);
   
   return (
     <div className={styles.app}>
@@ -23,7 +19,7 @@ const StopWatch = () => {
           <StopWatchItem
             key={id}
             id={id}
-            onDelete={deleteStopWatch}
+            setStopwatchIds={setStopwatchIds}
           />  
         ))}
       </div>

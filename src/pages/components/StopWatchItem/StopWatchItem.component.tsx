@@ -1,14 +1,14 @@
-import { useMemo, useCallback, useState, useEffect } from "react";
+import { useMemo, useCallback, useState, useEffect, memo } from "react";
 import { Button } from "../../../shared/ui/Button";
 import { formatTime } from "../../../shared/utils/formatTime.ts";
 import styles from "./StopWatchItem.module.scss";
 
 interface StopWatchItemProps {
   id: string;
-  onDelete: (id: string) => void;
+  setStopwatchIds: (updater: (prev: string[]) => string[]) => void;
 }
 
-const StopWatchItem = ({ id, onDelete }: StopWatchItemProps) => {
+const StopWatchItem = ({ id, setStopwatchIds }: StopWatchItemProps) => {
   const [time, setTime] = useState<number>(0);
   const [isRunning, setIsRunning] = useState<boolean>(false);
   const [hasStarted, setHasStarted] = useState<boolean>(false);
@@ -45,25 +45,21 @@ const StopWatchItem = ({ id, onDelete }: StopWatchItemProps) => {
   }, []);
 
   const handleDelete = useCallback((): void => {
-    onDelete(id);
-  }, [id, onDelete]);
-
-  const isShowStart = !hasStarted;
-  const isShowPauseAndClear = isRunning;
-  const isShowResumeAndClear = hasStarted && !isRunning;
+    setStopwatchIds(prev => prev.filter(swId => swId !== id));
+  }, [id, setStopwatchIds]);
 
   return (
     <div className={styles.container}>
       <div className={styles.time}>{formattedTime}</div>
 
       <div className={styles.buttons}>
-        {isShowStart && (
+        {!hasStarted && (
           <Button variant="start" onClick={handleStart}>
             Start
           </Button>
         )}
 
-        {isShowPauseAndClear && (
+        {isRunning && (
           <>
             <Button variant="pause" onClick={handlePause}>
               Pause
@@ -74,7 +70,7 @@ const StopWatchItem = ({ id, onDelete }: StopWatchItemProps) => {
           </>
         )}
 
-        {isShowResumeAndClear && (
+        {hasStarted && !isRunning && (
           <>
             <Button variant="resume" onClick={handleResume}>
               Resume
@@ -93,4 +89,4 @@ const StopWatchItem = ({ id, onDelete }: StopWatchItemProps) => {
   );
 };
 
-export default StopWatchItem;
+export default memo(StopWatchItem);
