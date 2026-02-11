@@ -1,4 +1,4 @@
-import { StopWatch } from "./pages/components/StopWatch";
+import { StopWatch } from "./pages/StopWatch";
 
 const App = () => {
   return <StopWatch />;

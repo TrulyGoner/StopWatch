@@ -1,5 +1,5 @@
 import { memo } from "react";
-import type { ButtonProps } from "../../../types/types.ts";
+import type { ButtonProps } from "./Button.types.ts";
 import styles from "./Button.module.scss";
 
 const Button = ({ variant, onClick, children }: ButtonProps) => {
