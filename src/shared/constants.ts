@@ -3,3 +3,5 @@ export const TIME_CONSTANTS = {
   SECONDS_PER_HOUR: 3600,
   SECONDS_PER_MINUTE: 60,
 } as const;
+
+export const STORAGE_KEY = 'stopwatches';
