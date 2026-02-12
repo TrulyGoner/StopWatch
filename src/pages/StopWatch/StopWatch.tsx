@@ -1,9 +1,17 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { StopWatchItem } from "../components/StopWatchItem/index.ts";
+import { loadStopWatches } from "../../shared/utils/localStorage";
 import styles from './StopWatch.module.scss'
 
 const StopWatch = () => {
   const [stopwatchIds, setStopwatchIds] = useState<string[]>([]);
+
+  useEffect(() => {
+    const saved = loadStopWatches();
+    if (saved.length > 0) {
+      setStopwatchIds(saved.map(sw => sw.id));
+    }
+  }, []);
 
   const addStopWatch = useCallback(() => {
     const newId = Date.now().toString();

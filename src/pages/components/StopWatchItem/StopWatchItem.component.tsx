@@ -1,6 +1,7 @@
 import { useMemo, useCallback, useState, useEffect, memo } from "react";
 import { Button } from "../../../shared/ui/Button";
 import { formatTime } from "../../../shared/utils/formatTime.ts";
+import { saveStopWatch, deleteStopWatch, calculateTimeDiff, loadStopWatches } from "../../../shared/utils/localStorage";
 import styles from "./StopWatchItem.module.scss";
 
 interface StopWatchItemProps {
@@ -12,8 +13,41 @@ const StopWatchItem = ({ id, setStopwatchIds }: StopWatchItemProps) => {
   const [time, setTime] = useState<number>(0);
   const [isRunning, setIsRunning] = useState<boolean>(false);
   const [hasStarted, setHasStarted] = useState<boolean>(false);
+  const [initialized, setInitialized] = useState<boolean>(false);
 
   const formattedTime = useMemo(() => formatTime(time), [time]);
+
+  useEffect(() => {
+    const saved = loadStopWatches();
+    const stopwatch = saved.find(sw => sw.id === id);
+    
+    if (stopwatch) {
+      let restoredTime = stopwatch.time;
+
+      if (stopwatch.isRunning && stopwatch.lastSavedAt) {
+        const timeDiff = calculateTimeDiff(stopwatch.lastSavedAt);
+        restoredTime += timeDiff;
+      }
+      
+      setTime(restoredTime);
+      setIsRunning(stopwatch.isRunning);
+      setHasStarted(stopwatch.hasStarted);
+    }
+    
+    setInitialized(true);
+  }, [id]);
+
+  useEffect(() => {
+    if (!initialized) return;
+
+    saveStopWatch({
+      id,
+      time,
+      isRunning,
+      hasStarted,
+      lastSavedAt: isRunning ? Date.now() : undefined,
+    });
+  }, [id, time, isRunning, hasStarted, initialized]);
 
   useEffect(() => {
     if (!isRunning) return;
@@ -45,6 +79,7 @@ const StopWatchItem = ({ id, setStopwatchIds }: StopWatchItemProps) => {
   }, []);
 
   const handleDelete = useCallback((): void => {
+    deleteStopWatch(id);
     setStopwatchIds(prev => prev.filter(swId => swId !== id));
   }, [id, setStopwatchIds]);
 
