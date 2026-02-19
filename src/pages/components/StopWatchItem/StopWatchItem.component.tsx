@@ -40,13 +40,19 @@ const StopWatchItem = ({ id, setStopwatchIds }: StopWatchItemProps) => {
   useEffect(() => {
     if (!initialized) return;
 
-    saveStopWatch({
-      id,
-      time,
-      isRunning,
-      hasStarted,
-      lastSavedAt: isRunning ? Date.now() : undefined,
-    });
+    const timeoutId = setTimeout(() => {
+      saveStopWatch({
+        id,
+        time,
+        isRunning,
+        hasStarted,
+        lastSavedAt: Date.now() 
+      });
+    }, 900);
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
   }, [id, time, isRunning, hasStarted, initialized]);
 
   useEffect(() => {
