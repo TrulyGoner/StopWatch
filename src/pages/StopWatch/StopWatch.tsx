@@ -31,11 +31,8 @@ const StopWatch = () => {
       <button onClick={handleAddClick} className={styles.addButton}>Add Stopwatch</button>
       <ConfirmationModal
         isOpen={isModalOpen}
-        message="Ты уверен, что хочешь создать таймер?"
         onConfirm={handleConfirmAddStopWatch}
         onCancel={() => setIsModalOpen(false)}
-        confirmText="Да"
-        cancelText="Нет"
       />
       <div className={styles.list}>
         {stopwatchIds.map(id => (

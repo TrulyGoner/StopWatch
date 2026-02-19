@@ -7,7 +7,7 @@ const ConfirmationModal = ({
   onConfirm,
   onCancel,
   title = "Подтверждение",
-  message,
+  message = "Ты уверен, что хочешь создать таймер?",
   confirmText = "Да",
   cancelText = "Нет",
 }: ConfirmationModalProps) => {
