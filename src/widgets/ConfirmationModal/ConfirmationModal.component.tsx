@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, useEffect, useCallback } from "react";
 import type { ConfirmationModalProps } from "./ConfirmationModal.types";
 import styles from "./ConfirmationModal.module.scss";
 
@@ -12,6 +12,21 @@ const ConfirmationModal = ({
   cancelText = "Нет",
 }: ConfirmationModalProps) => {
   if (!isOpen) return null;
+
+  const handleDocClick = useCallback(() => {
+    console.log('click');
+  }, []);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    document.getElementsByTagName('html')[0].addEventListener('click', handleDocClick);
+
+    return () => {
+    document.getElementsByTagName('html')[0].removeEventListener('click', handleDocClick);
+    };
+
+  }, [isOpen, handleDocClick]);
 
   const handleConfirm = () => {
     onConfirm();
