@@ -53,7 +53,7 @@ const StopWatchItem = ({ id, setStopwatchIds }: StopWatchItemProps) => {
     return () => {
       clearTimeout(timeoutId);
     };
-  }, [id, time, isRunning, hasStarted, initialized]);
+  }, [id, time, isRunning, hasStarted]);
 
   useEffect(() => {
     if (!isRunning) return;
