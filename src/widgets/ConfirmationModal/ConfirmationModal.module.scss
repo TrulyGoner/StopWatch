@@ -62,8 +62,9 @@
   background-color: #4caf50;
   color: white;
 
-  &:hover {
-    background-color: #45a049;
+  &:hover,
+  &:focus-visible {
+    background-color: #356e38;
   }
 }
 
@@ -71,7 +72,8 @@
   background-color: #f44336;
   color: white;
 
-  &:hover {
-    background-color: #da190b;
+  &:hover,
+  &:focus-visible {
+    background-color: #b0362d;
   }
 }

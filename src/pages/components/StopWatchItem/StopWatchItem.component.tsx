@@ -1,4 +1,4 @@
-import { useMemo, useCallback, useState, useEffect, memo } from "react";
+import { useMemo, useCallback, useState, useEffect, useRef, memo } from "react";
 import { Button } from "../../../shared/ui/Button";
 import { formatTime } from "../../../shared/utils/formatTime.ts";
 import { saveStopWatch, deleteStopWatch, calculateTimeDiff, loadStopWatches } from "../../../shared/utils/localStorage";
@@ -16,6 +16,30 @@ const StopWatchItem = ({ id, setStopwatchIds }: StopWatchItemProps) => {
   const [initialized, setInitialized] = useState<boolean>(false);
 
   const formattedTime = useMemo(() => formatTime(time), [time]);
+
+  // Refs для синхронного сохранения при размонтировании (виртуализация)
+  const timeRef = useRef(time);
+  const isRunningRef = useRef(isRunning);
+  const hasStartedRef = useRef(hasStarted);
+  const initializedRef = useRef(initialized);
+
+  useEffect(() => { timeRef.current = time; }, [time]);
+  useEffect(() => { isRunningRef.current = isRunning; }, [isRunning]);
+  useEffect(() => { hasStartedRef.current = hasStarted; }, [hasStarted]);
+  useEffect(() => { initializedRef.current = initialized; }, [initialized]);
+
+  useEffect(() => {
+    return () => {
+      if (!initializedRef.current) return;
+      saveStopWatch({
+        id,
+        time: timeRef.current,
+        isRunning: isRunningRef.current,
+        hasStarted: hasStartedRef.current,
+        lastSavedAt: Date.now(),
+      });
+    };
+  }, [id]);
 
   useEffect(() => {
     const saved = loadStopWatches();
@@ -90,7 +114,7 @@ const StopWatchItem = ({ id, setStopwatchIds }: StopWatchItemProps) => {
   }, [id, setStopwatchIds]);
 
   return (
-    <div className={styles.container}>
+    <div className={styles.container} tabIndex={-1} data-stopwatch>
       <div className={styles.time}>{formattedTime}</div>
 
       <div className={styles.buttons}>
