@@ -17,7 +17,6 @@ const StopWatchItem = ({ id, setStopwatchIds }: StopWatchItemProps) => {
 
   const formattedTime = useMemo(() => formatTime(time), [time]);
 
-  // Refs для синхронного сохранения при размонтировании (виртуализация)
   const timeRef = useRef(time);
   const isRunningRef = useRef(isRunning);
   const hasStartedRef = useRef(hasStarted);
