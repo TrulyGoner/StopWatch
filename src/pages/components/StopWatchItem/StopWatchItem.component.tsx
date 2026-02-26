@@ -90,7 +90,7 @@ const StopWatchItem = ({ id, setStopwatchIds }: StopWatchItemProps) => {
   }, [id, setStopwatchIds]);
 
   return (
-    <div className={styles.container}>
+    <div className={styles.container} tabIndex={-1} data-stopwatch>
       <div className={styles.time}>{formattedTime}</div>
 
       <div className={styles.buttons}>

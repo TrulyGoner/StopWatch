@@ -1,4 +1,4 @@
-import { memo, useEffect, useCallback } from "react";
+import { memo, useEffect, useRef } from "react";
 import type { ConfirmationModalProps } from "./ConfirmationModal.types";
 import styles from "./ConfirmationModal.module.scss";
 
@@ -7,26 +7,44 @@ const ConfirmationModal = ({
   onConfirm,
   onCancel,
   title = "Подтверждение",
-  message = "Ты уверен, что хочешь создать таймер?",
+  message = "Ты уверен?",
   confirmText = "Да",
   cancelText = "Нет",
 }: ConfirmationModalProps) => {
-  if (!isOpen) return null;
-
-  const handleDocClick = useCallback(() => {
-    console.log('click');
-  }, []);
+  const confirmBtnRef  = useRef<HTMLButtonElement>(null);
+  const cancelBtnRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     if (!isOpen) return;
 
-    document.getElementsByTagName('html')[0].addEventListener('click', handleDocClick);
+    document.body.style.overflow = "hidden";
 
-    return () => {
-    document.getElementsByTagName('html')[0].removeEventListener('click', handleDocClick);
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        onCancel();
+        return;
+      }
+
+      if (e.key === "Tab") {
+        e.preventDefault();
+        const active = document.activeElement;
+        if (active === confirmBtnRef.current) {
+          cancelBtnRef.current?.focus();
+        } else {
+          confirmBtnRef.current?.focus();
+        }
+      }
     };
 
-  }, [isOpen, handleDocClick]);
+    document.getElementsByTagName("html")[0].addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = "";
+      document.getElementsByTagName("html")[0].removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isOpen, onCancel]);
+
+  if (!isOpen) return null;
 
   const handleConfirm = () => {
     onConfirm();
@@ -43,12 +61,14 @@ const ConfirmationModal = ({
         <p className={styles.message}>{message}</p>
         <div className={styles.buttons}>
           <button
+            ref={confirmBtnRef}
             className={`${styles.button} ${styles.confirmButton}`}
             onClick={handleConfirm}
           >
             {confirmText}
           </button>
           <button
+            ref={cancelBtnRef}
             className={`${styles.button} ${styles.cancelButton}`}
             onClick={handleCancel}
           >
