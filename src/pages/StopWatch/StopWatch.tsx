@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect, useRef, type CSSProperties, type ReactElement, type Dispatch, type SetStateAction } from "react";
 import { List } from "react-window";
-import { StopWatchItem } from "../components/StopWatchItem/index.ts";
+import StopWatchItem from "../components/StopWatchItem/StopWatchItem.component.tsx";
 import { loadStopWatches } from "../../shared/utils/localStorage";
 import { ConfirmationModal } from "../../widgets/ConfirmationModal";
 import styles from './StopWatch.module.scss'

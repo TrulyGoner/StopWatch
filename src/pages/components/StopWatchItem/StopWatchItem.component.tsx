@@ -1,4 +1,4 @@
-import { useMemo, useCallback, useState, useEffect, memo } from "react";
+import { useMemo, useCallback, useReducer, useEffect, memo } from "react";
 import { Button } from "../../../shared/ui/Button";
 import { formatTime } from "../../../shared/utils/formatTime.ts";
 import { saveStopWatch, deleteStopWatch, calculateTimeDiff, loadStopWatches } from "../../../shared/utils/localStorage";
@@ -9,18 +9,57 @@ interface StopWatchItemProps {
   setStopwatchIds: (updater: (prev: string[]) => string[]) => void;
 }
 
+interface State {
+  time: number;
+  isRunning: boolean;
+  hasStarted: boolean;
+  initialized: boolean;
+}
+
+type Action =
+  | { type: 'INITIALIZE'; saved: { time: number; isRunning: boolean; hasStarted: boolean } | null }
+  | { type: 'TICK' }
+  | { type: 'START' }
+  | { type: 'PAUSE' }
+  | { type: 'RESUME' }
+  | { type: 'CLEAR' };
+
+const initialState: State = {
+  time: 0,
+  isRunning: false,
+  hasStarted: false,
+  initialized: false,
+};
+
+function reducer(state: State, action: Action): State {
+  switch (action.type) {
+    case 'INITIALIZE':
+      if (action.saved === null) return { ...state, initialized: true };
+      return { ...state, ...action.saved, initialized: true };
+    case 'TICK':
+      return { ...state, time: state.time + 1 };
+    case 'START':
+      return { ...state, isRunning: true, hasStarted: true };
+    case 'PAUSE':
+      return { ...state, isRunning: false };
+    case 'RESUME':
+      return { ...state, isRunning: true };
+    case 'CLEAR':
+      return { ...state, time: 0, isRunning: false, hasStarted: false };
+    default:
+      return state;
+  }
+}
+
 const StopWatchItem = ({ id, setStopwatchIds }: StopWatchItemProps) => {
-  const [time, setTime] = useState<number>(0);
-  const [isRunning, setIsRunning] = useState<boolean>(false);
-  const [hasStarted, setHasStarted] = useState<boolean>(false);
-  const [initialized, setInitialized] = useState<boolean>(false);
+  const [{ time, isRunning, hasStarted, initialized }, dispatch] = useReducer(reducer, initialState);
 
   const formattedTime = useMemo(() => formatTime(time), [time]);
 
   useEffect(() => {
     const saved = loadStopWatches();
     const stopwatch = saved.find(sw => sw.id === id);
-    
+
     if (stopwatch) {
       let restoredTime = stopwatch.time;
 
@@ -28,13 +67,11 @@ const StopWatchItem = ({ id, setStopwatchIds }: StopWatchItemProps) => {
         const timeDiff = calculateTimeDiff(stopwatch.lastSavedAt);
         restoredTime += timeDiff;
       }
-      
-      setTime(restoredTime);
-      setIsRunning(stopwatch.isRunning);
-      setHasStarted(stopwatch.hasStarted);
+
+      dispatch({ type: 'INITIALIZE', saved: { time: restoredTime, isRunning: stopwatch.isRunning, hasStarted: stopwatch.hasStarted } });
+    } else {
+      dispatch({ type: 'INITIALIZE', saved: null });
     }
-    
-    setInitialized(true);
   }, [id]);
 
   useEffect(() => {
@@ -59,29 +96,26 @@ const StopWatchItem = ({ id, setStopwatchIds }: StopWatchItemProps) => {
     if (!isRunning) return;
 
     const interval = setInterval(() => {
-      setTime(prev => prev + 1);
+      dispatch({ type: 'TICK' });
     }, 1000);
 
     return () => clearInterval(interval);
   }, [isRunning]);
 
   const handleStart = useCallback((): void => {
-    setIsRunning(true);
-    setHasStarted(true);
+    dispatch({ type: 'START' });
   }, []);
 
   const handlePause = useCallback((): void => {
-    setIsRunning(false);
+    dispatch({ type: 'PAUSE' });
   }, []);
 
   const handleResume = useCallback((): void => {
-    setIsRunning(true);
+    dispatch({ type: 'RESUME' });
   }, []);
 
   const handleClear = useCallback((): void => {
-    setTime(0);
-    setIsRunning(false);
-    setHasStarted(false);
+    dispatch({ type: 'CLEAR' });
   }, []);
 
   const handleDelete = useCallback((): void => {
