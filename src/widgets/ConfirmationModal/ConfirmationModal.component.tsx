@@ -46,31 +46,23 @@ const ConfirmationModal = ({
 
   if (!isOpen) return null;
 
-  const handleConfirm = () => {
-    onConfirm();
-  };
-
-  const handleCancel = () => {
-    onCancel();
-  };
-
   return (
-    <div className={styles.overlay} onClick={handleCancel}>
-      <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+    <div className={styles.overlay} role="presentation" onClick={onCancel} onKeyDown={onCancel}>
+      <div className={styles.modal} role="dialog" onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.stopPropagation()}>
         {title && <h2 className={styles.title}>{title}</h2>}
         <p className={styles.message}>{message}</p>
         <div className={styles.buttons}>
           <button
             ref={confirmBtnRef}
             className={`${styles.button} ${styles.confirmButton}`}
-            onClick={handleConfirm}
+            onClick={onConfirm}
           >
             {confirmText}
           </button>
           <button
             ref={cancelBtnRef}
             className={`${styles.button} ${styles.cancelButton}`}
-            onClick={handleCancel}
+            onClick={onCancel}
           >
             {cancelText}
           </button>

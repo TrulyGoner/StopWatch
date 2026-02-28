@@ -8,7 +8,7 @@ interface StoredStopWatch {
   lastSavedAt?: number;
 }
 
-const getStoredStopWatches = (): StoredStopWatch[] => {
+export const loadStopWatches = (): StoredStopWatch[] => {
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
     return stored ? JSON.parse(stored) : [];
@@ -20,7 +20,7 @@ const getStoredStopWatches = (): StoredStopWatch[] => {
 
 export const saveStopWatch = (stopwatch: StoredStopWatch): void => {
   try {
-    const stopwatches = getStoredStopWatches();
+    const stopwatches = loadStopWatches();
     
     const index = stopwatches.findIndex(sw => sw.id === stopwatch.id);
     if (index !== -1) {
@@ -35,25 +35,13 @@ export const saveStopWatch = (stopwatch: StoredStopWatch): void => {
   }
 };
 
-export const loadStopWatches = (): StoredStopWatch[] => {
-  return getStoredStopWatches();
-};
-
 export const deleteStopWatch = (id: string): void => {
   try {
-    const stopwatches = getStoredStopWatches();
+    const stopwatches = loadStopWatches();
     const filtered = stopwatches.filter(sw => sw.id !== id);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(filtered));
   } catch (error) {
     console.error('Error deleting stopwatch from localStorage:', error);
-  }
-};
-
-export const clearAllStopWatches = (): void => {
-  try {
-    localStorage.removeItem(STORAGE_KEY);
-  } catch (error) {
-    console.error('Error clearing stopwatches from localStorage:', error);
   }
 };
 
