@@ -1,9 +1,10 @@
-import { useState, useCallback, useEffect, useRef, type CSSProperties, type ReactElement, type Dispatch, type SetStateAction } from "react";
+import { useState, useCallback, useEffect, useRef, lazy, Suspense, type CSSProperties, type ReactElement, type Dispatch, type SetStateAction } from "react";
 import { List } from "react-window";
 import StopWatchItem from "../components/StopWatchItem/StopWatchItem.component.tsx";
 import { loadStopWatches } from "../../shared/utils/localStorage";
-import { ConfirmationModal } from "../../widgets/ConfirmationModal";
 import styles from './StopWatch.module.scss'
+
+const ConfirmationModal = lazy(() => import("../../widgets/ConfirmationModal/ConfirmationModal.component"));
 
 const ITEM_HEIGHT = 200;
 
@@ -83,12 +84,16 @@ const StopWatch = () => {
     <div className={styles.app}>
       <h1 className={styles.title}>Stopwatch App</h1>
       <button onClick={handleAddClick} className={styles.addButton}>Add Stopwatch</button>
-      <ConfirmationModal 
-        message="Ты уверен что хочешь создать таймер?"
-        isOpen={isModalOpen}
-        onConfirm={handleConfirmAddStopWatch}
-        onCancel={() => setIsModalOpen(false)}
-      />
+      {isModalOpen && (
+        <Suspense fallback={null}>
+          <ConfirmationModal 
+            message="Ты уверен что хочешь создать таймер?"
+            isOpen={isModalOpen}
+            onConfirm={handleConfirmAddStopWatch}
+            onCancel={() => setIsModalOpen(false)}
+          />
+        </Suspense>
+      )}
       <div className={styles.list} ref={outerRef}>
         <List<RowExtraProps>
           listRef={listRef}
